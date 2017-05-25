@@ -1,11 +1,9 @@
 #ifndef UKF_H
 #define UKF_H
-
-#include "measurement_package.h"
 #include "Eigen/Dense"
+#include "measurement_package.h"
+#include "ground_truth_package.h"
 #include <vector>
-#include <string>
-#include <fstream>
 #include "tools.h"
 
 using Eigen::MatrixXd;
@@ -33,7 +31,7 @@ public:
   MatrixXd Xsig_pred_;
 
   ///* time when the state is true, in us
-  long long time_us_;
+  long time_us_;
 
   ///* Process noise standard deviation longitudinal acceleration in m/s^2
   double std_a_;
@@ -47,6 +45,9 @@ public:
   ///* Laser measurement noise standard deviation position2 in m
   double std_laspy_;
 
+  ///* Laser measurement noise covariance matrix
+  MatrixXd R_laser_;
+
   ///* Radar measurement noise standard deviation radius in m
   double std_radr_;
 
@@ -56,6 +57,9 @@ public:
   ///* Radar measurement noise standard deviation radius change in m/s
   double std_radrd_ ;
 
+  ///* Radar measurement noise covariance matrix
+  MatrixXd R_radar_;
+
   ///* Weights of sigma points
   VectorXd weights_;
 
@@ -64,6 +68,7 @@ public:
 
   ///* Augmented state dimension
   int n_aug_;
+  int n_sig_;
 
   ///* Sigma point spreading parameter
   double lambda_;
@@ -87,6 +92,7 @@ public:
   /**
    * ProcessMeasurement
    * @param meas_package The latest measurement data of either radar or laser
+   * @param gt_package The ground truth of the state x at measurement time
    */
   void ProcessMeasurement(MeasurementPackage meas_package);
 
